@@ -2,6 +2,9 @@
 #include <pcap.h>
 #include <vector>
 #include <utility>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
 #include "ethhdr.h"
 #include "arphdr.h"
 
@@ -36,6 +39,26 @@ bool parse(Param* param, int argc, char* argv[]) {
 	return true;
 }
 
+// https://www.binarytides.com/c-program-to-get-mac-address-from-interface-name-on-linux/
+Mac getAttackerMac(const char* dev) {
+	int fd;
+	struct ifreq ifr;
+	unsigned char *mac;
+
+	fd = socket(AF_INET, SOCK_DGRAM, 0);
+
+	ifr.ifr_addr.sa_family = AF_INET;
+	strncpy(ifr.ifr_name, dev, IFNAMSIZ - 1);
+
+	ioctl(fd, SIOCGIFHWADDR, &ifr);
+
+	close(fd);
+
+	mac = (unsigned char *)ifr.ifr_hwaddr.sa_data;
+
+	return Mac(mac);
+}
+
 int main(int argc, char* argv[]) {
 	if (!parse(&param, argc, argv))
 		return EXIT_FAILURE;
@@ -47,6 +70,9 @@ int main(int argc, char* argv[]) {
 		fprintf(stderr, "couldn't open device %s(%s)\n", dev, errbuf);
 		return EXIT_FAILURE;
 	}
+
+	// 1. Attacker MAC 주소 휙득
+	Mac attackerMac = getAttackerMac(dev);
 
 	EthArpPacket packet;
 
