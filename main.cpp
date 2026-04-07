@@ -1,5 +1,7 @@
 #include <cstdio>
 #include <pcap.h>
+#include <vector>
+#include <utility>
 #include "ethhdr.h"
 #include "arphdr.h"
 
@@ -15,13 +17,30 @@ void usage() {
 	printf("sample : send-arp enp6s0 192.168.200.141 192.168.200.254\n");
 }
 
-int main(int argc, char* argv[]) {
+struct Param {
+	char* dev_; // 인터페이스 이름
+	std::vector<std::pair<Ip, Ip>> pairs_; // (sender IP, target IP) 쌍 목록 
+};
+
+Param param;
+
+bool parse(Param* param, int argc, char* argv[]) {
 	if (argc < 4) {
 		usage();
-		return EXIT_FAILURE;
+		return false;
 	}
+	param->dev_ = argv[1];
+	for (int i = 2; i + 1 < argc; i += 2) {
+		param->pairs_.push_back({Ip(argv[i]), Ip(argv[i + 1])});
+	}
+	return true;
+}
 
-	char* dev = argv[1];
+int main(int argc, char* argv[]) {
+	if (!parse(&param, argc, argv))
+		return EXIT_FAILURE;
+
+	char* dev = param.dev_;
 	char errbuf[PCAP_ERRBUF_SIZE];
 	pcap_t* pcap = pcap_open_live(dev, 0, 0, 0, errbuf);
 	if (pcap == nullptr) {
