@@ -11,12 +11,12 @@ struct EthArpPacket final {
 #pragma pack(pop)
 
 void usage() {
-	printf("syntax: send-arp-test <interface>\n");
-	printf("sample: send-arp-test wlan0\n");
+	printf("syntax : send-arp <interface> <sender ip> <target ip> [<sender ip 2> <target ip 2> ...]\n");
+	printf("sample : send-arp enp6s0 192.168.200.141 192.168.200.254\n");
 }
 
 int main(int argc, char* argv[]) {
-	if (argc != 2) {
+	if (argc < 4) {
 		usage();
 		return EXIT_FAILURE;
 	}
