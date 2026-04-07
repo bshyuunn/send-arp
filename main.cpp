@@ -40,7 +40,7 @@ bool parse(Param* param, int argc, char* argv[]) {
 }
 
 // https://www.binarytides.com/c-program-to-get-mac-address-from-interface-name-on-linux/
-Mac getAttackerMac(const char* dev) {
+Mac getMac(const char* dev) {
 	int fd;
 	struct ifreq ifr;
 	unsigned char *mac;
@@ -59,6 +59,23 @@ Mac getAttackerMac(const char* dev) {
 	return Mac(mac);
 }
 
+Ip getIp(const char* dev) {
+	int fd;
+	struct ifreq ifr;
+
+	fd = socket(AF_INET, SOCK_DGRAM, 0);
+
+	ifr.ifr_addr.sa_family = AF_INET;
+	strncpy(ifr.ifr_name, dev, IFNAMSIZ - 1);
+
+	ioctl(fd, SIOCGIFADDR, &ifr);
+
+	close(fd);
+
+	struct sockaddr_in* sin = (struct sockaddr_in*)&ifr.ifr_addr;
+	return Ip(ntohl(sin->sin_addr.s_addr));
+}
+
 int main(int argc, char* argv[]) {
 	if (!parse(&param, argc, argv))
 		return EXIT_FAILURE;
@@ -72,7 +89,12 @@ int main(int argc, char* argv[]) {
 	}
 
 	// 1. Attacker MAC 주소 휙득
-	Mac attackerMac = getAttackerMac(dev);
+	Mac attackerMac = getMac(dev);
+	// 2. Attacker IP 주소 휙득
+	Ip attackerIp = getIp(dev);
+	
+	printf("MAC: %s\n", std::string(attackerMac).c_str());
+	printf("IP : %s\n", std::string(attackerIp).c_str());
 
 	EthArpPacket packet;
 
