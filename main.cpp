@@ -140,8 +140,8 @@ int main(int argc, char* argv[]) {
 	// 2. Attacker IP 주소 휙득
 	Ip attackerIp = getMyIp(dev);
 
-	printf("MAC: %s\n", std::string(attackerMac).c_str());
-	printf("IP : %s\n", std::string(attackerIp).c_str());
+	printf("Attacker MAC: %s\n", std::string(attackerMac).c_str());
+	printf("Attacker IP: %s\n", std::string(attackerIp).c_str());
 
 	for (int i = 0; i < param.pairs_.size(); i++) {
 		Ip senderIp = param.pairs_[i].first;
