@@ -143,11 +143,11 @@ int main(int argc, char* argv[]) {
 	printf("MAC: %s\n", std::string(attackerMac).c_str());
 	printf("IP : %s\n", std::string(attackerIp).c_str());
 
-	// 3. Victim MAC 주소 휙득
 	for (int i = 0; i < param.pairs_.size(); i++) {
 		Ip senderIp = param.pairs_[i].first;
 		Ip targetIp = param.pairs_[i].second;
 
+		// 3. Victim MAC 주소 휙득
 		Mac victimMac = getVictimMac(pcap, attackerMac, attackerIp, senderIp);
 		printf("Victim MAC: %s\n", std::string(victimMac).c_str());
 
