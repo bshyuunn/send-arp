@@ -5,4 +5,4 @@
 ![](./send-arp-demo.gif)
 
 
-mp4가 readme.md에 넣는다고 바로 보이지가 않아서 gif로 변환해서 넣습니다. 원본은 [./send-arp-demp.mp4](./send-arp-demp.mp4) 에서 볼 수 있습니다.
+mp4가 readme.md에 넣는다고 바로 보이지가 않아서 gif로 변환해서 넣습니다. 원본은 [./send-arp-demo.mov](./send-arp-demo.mov) 에서 볼 수 있습니다.
