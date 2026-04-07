@@ -40,7 +40,7 @@ bool parse(Param* param, int argc, char* argv[]) {
 }
 
 // https://www.binarytides.com/c-program-to-get-mac-address-from-interface-name-on-linux/
-Mac getMac(const char* dev) {
+Mac getMyMac(const char* dev) {
 	int fd;
 	struct ifreq ifr;
 	unsigned char *mac;
@@ -59,7 +59,7 @@ Mac getMac(const char* dev) {
 	return Mac(mac);
 }
 
-Ip getIp(const char* dev) {
+Ip getMyIp(const char* dev) {
 	int fd;
 	struct ifreq ifr;
 
@@ -89,10 +89,10 @@ int main(int argc, char* argv[]) {
 	}
 
 	// 1. Attacker MAC 주소 휙득
-	Mac attackerMac = getMac(dev);
+	Mac attackerMac = getMyMac(dev);
 	// 2. Attacker IP 주소 휙득
-	Ip attackerIp = getIp(dev);
-	
+	Ip attackerIp = getMyIp(dev);
+
 	printf("MAC: %s\n", std::string(attackerMac).c_str());
 	printf("IP : %s\n", std::string(attackerIp).c_str());
 
